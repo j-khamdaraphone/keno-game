@@ -11,10 +11,7 @@ import javafx.scene.text.FontPosture;
 public class Welcome {
     private ImageView kenoImage;
     private Label welcomeText;
-//    private GaussianBlur blurEffect;
     private Button startButton;
-//    private RulesPopup rulesPopup;
-//    private OddsPopup oddsPopup;
     static final int picHeight = 350;
     static final int picWidth = 450;
 

@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import javafx.scene.layout.StackPane;
 
 public class JavaFXTemplate extends Application {
 
@@ -24,19 +24,32 @@ public class JavaFXTemplate extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-         primaryStage.setTitle("Keno");
-
-	     BorderPane root = new BorderPane();
-         root.setStyle("-fx-background-color: #1e1e1e;");
-	     KenoMenu kenoMenu = new KenoMenu();
-         Welcome welcome = new Welcome();
-
-        root.setTop(kenoMenu.getMenuBar());
+        primaryStage.setTitle("Keno");
+        Welcome welcome = new Welcome();
+        StackPane rootPane = new StackPane();
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: #1e1e1e;");
+        rootPane.getChildren().add(root);
         root.setCenter(welcome.createWelcomeScreen());
 
-	     Scene scene = new Scene(root, 700, 700);
-			primaryStage.setScene(scene);
-			primaryStage.show();
+        KenoMenu kenoMenu = new KenoMenu();
+        root.setTop(kenoMenu.getMenuBar());
+
+        kenoMenu.getRulesOfGame().setOnAction(e ->
+                kenoMenu.showPopup("Rules of Keno", Rules.getText(), root, rootPane)
+        );
+
+        kenoMenu.getOddsOfwin().setOnAction(e ->
+                kenoMenu.showPopup("Odds of Winning", Odds.getText(), root, rootPane)
+        );
+
+        kenoMenu.getExit().setOnAction(e -> primaryStage.close());
+
+        kenoMenu.getNewLookItem().setOnAction(e -> kenoMenu.applyNewLook());
+
+        Scene scene = new Scene(rootPane, 700, 700);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 		
 				
 		
