@@ -27,8 +27,12 @@ public class JavaFXTemplate extends Application {
          primaryStage.setTitle("Keno");
 
 	     BorderPane root = new BorderPane();
+         root.setStyle("-fx-background-color: #1e1e1e;");
 	     KenoMenu kenoMenu = new KenoMenu();
-         root.setTop(kenoMenu.getMenuBar());
+         Welcome welcome = new Welcome();
+
+        root.setTop(kenoMenu.getMenuBar());
+        root.setCenter(welcome.createWelcomeScreen());
 
 	     Scene scene = new Scene(root, 700, 700);
 			primaryStage.setScene(scene);
