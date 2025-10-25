@@ -14,14 +14,14 @@ import javafx.scene.text.Text;
 
 
 
-public class GamePlaySpot extends Vbox {
+public class GamePlaySpot extends VBox {
     private List<Button> spotOptions;
     private List<Button> drawOptions;
-    private KenoMenuBar menuHelper;
+    private KenoMenu menuHelper;
     private int selectedSpots = 0;
     private int selectedDrawings = 0;
 
-    public GamePlaySpot(Stage stage) {
+    public GamePlaySpot() {
         setSpacing(25);
         setPadding(new Insets(20));
         setStyle("-fx-background-color: linear-gradient(to bottom, #003366, #001a33);");
@@ -45,8 +45,8 @@ public class GamePlaySpot extends Vbox {
                 menuHelper.getMenuBar(),
                 title,
                 new Text("Select Spots:"), spotBox,
-                new Text("Select Drawings:"), drawBox,
-                //backButton
+                new Text("Select Drawings:"), drawBox
+                // backButton can be added here later
         );
 
     }
@@ -55,7 +55,7 @@ public class GamePlaySpot extends Vbox {
         List<Integer> spotValues = List.of(1, 4, 8, 10);
         List<Button> buttons = new ArrayList<>();
 
-        for (int al : spotValues) {
+        for (int val : spotValues) {
             Button b = new Button(String.valueOf(val));
             b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
 
@@ -66,42 +66,24 @@ public class GamePlaySpot extends Vbox {
         return buttons;
     }
 
-    private List<Button> createDrawButtons(){
+    private List<Button> createDrawButtons() {
         List<Button> buttons = new ArrayList<>();
-        for (int i=1, i<=4, i++){
-            button b= new Button(val)
+
+        for (int i = 1; i <= 4; i++) {
+            Button b = new Button(String.valueOf(i));
             b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
-            b.setOnAction(e -> handleSpotSelection(value));
+            b.setOnAction(e -> handleDrawSelection(i)); // correct handler
             buttons.add(b);
         }
 
         return buttons;
-
     }
 
-    private void handleSpotSelection(int spot){
-        selectedSpots = spot;
-        checkNextButton();
 
-    }
 
-    private void handleDrawSelection(int drawing){
-        selectedDrawings = drawing;
-        checkNextButton();
-    }
-
-    private void checkNextButton() {
-        nextButton.setDisable(selectedSpots == 0 || selectedDrawings == 0);
-    }
-
-    private void nextButton(){
-
-        0nNext.accept(null);
-    }
 
     public int getSelectedSpots() { return selectedSpots; }
     public int getSelectedDrawings() { return selectedDrawings; }
-    public Button getNextButton() { return nextButton; }
-    //public Button getBackButton() { return backButton; }
+
 
 }

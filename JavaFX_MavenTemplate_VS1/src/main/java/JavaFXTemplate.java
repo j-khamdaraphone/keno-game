@@ -45,7 +45,7 @@ public class JavaFXTemplate extends Application {
             GamePlaySpot gamePlaySpot = new GamePlaySpot();
             Scene gameScene = new Scene(gamePlaySpot, 700, 700);
             primaryStage.setScene(gameScene);
-
+        });
 
         kenoMenu.getRulesOfGame().setOnAction(e ->
                 kenoMenu.showPopup("Rules of Keno", Rules.getText(), root, rootPane)
@@ -65,6 +65,7 @@ public class JavaFXTemplate extends Application {
 
 
 		
-	}
 
+
+    }
 }
