@@ -7,39 +7,51 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.FontPosture;
+import javafx.scene.layout.StackPane;
+import javafx.geometry.Insets;
 
 public class Welcome {
     private ImageView kenoImage;
     private Label welcomeText;
     private Button startButton;
-    static final int picHeight = 350;
-    static final int picWidth = 450;
+    static final int picHeight = 600;
+    static final int picWidth = 600;
 
     public Welcome() {
-        // Start Button
-        startButton = new Button("Start");
-        startButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        startButton.setOnAction(e -> startPlay());
-        // Image
-        Image pic = new Image("keno.png");
+        // Background img
+        Image pic = new Image("keno2.png");
         kenoImage = new ImageView(pic);
         kenoImage.setFitHeight(picHeight);
         kenoImage.setFitWidth(picWidth);
         kenoImage.setPreserveRatio(true);
-        // Welcome Text
-        welcomeText = new Label("Welcome!");
-        welcomeText.setStyle("-fx-font-size: 24px; -fx-text-fill: white;");
+
+        // Start Button
+        Image startImage = new Image("play-button.png");
+        ImageView startImageView = new ImageView(startImage);
+        startImageView.setFitWidth(250);
+        startImageView.setFitHeight(200);
+        startImageView.setPreserveRatio(true);
+
+        startButton = new Button();
+        startButton.setGraphic(startImageView);
+        startButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+        startButton.setOnAction(e -> startPlay());
+
     }
 
-    public VBox createWelcomeScreen() {
-        VBox paneCenter = new VBox(10);
-        paneCenter.setAlignment(Pos.CENTER);
-        paneCenter.getChildren().addAll(welcomeText, kenoImage, startButton);
-
-        return paneCenter;
+    public StackPane createWelcomeScreen() {
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(kenoImage, startButton); // add button here
+        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+        startButton.setTranslateY(-150); // move it up a bit from bottom
+        return stack;
     }
 
     public void startPlay() {
+        System.out.println("Start button pressed...");
+    }
 
+    public Button getStartButton() {
+        return startButton;
     }
 }

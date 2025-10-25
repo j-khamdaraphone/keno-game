@@ -25,10 +25,13 @@ public class JavaFXTemplate extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
         primaryStage.setTitle("Keno");
+
         Welcome welcome = new Welcome();
         StackPane rootPane = new StackPane();
+        rootPane.setStyle("-fx-background-color: #01203f;");
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #1e1e1e;");
+
+
         rootPane.getChildren().add(root);
         root.setCenter(welcome.createWelcomeScreen());
 
@@ -50,8 +53,8 @@ public class JavaFXTemplate extends Application {
         Scene scene = new Scene(rootPane, 700, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
-		
-				
+
+
 		
 	}
 

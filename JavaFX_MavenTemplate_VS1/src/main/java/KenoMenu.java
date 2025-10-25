@@ -26,7 +26,7 @@ public class KenoMenu {
 
     public KenoMenu() {
         menuBar= new MenuBar();
-        kenoMenu=new Menu("Menu");
+        kenoMenu=new Menu("☆ Menu");
 
         rulesOfGame= new MenuItem("Rules");
         oddsOfwin= new MenuItem("Odds");
