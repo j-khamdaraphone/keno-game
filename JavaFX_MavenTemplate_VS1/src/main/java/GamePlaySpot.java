@@ -67,13 +67,15 @@ public class GamePlaySpot extends VBox {
     }
 
     private List<Button> createDrawButtons() {
+        List<Integer> spotValues = List.of(1, 4, 8, 10);
         List<Button> buttons = new ArrayList<>();
 
-        for (int i = 1; i <= 4; i++) {
-            Button b = new Button(String.valueOf(i));
+        for (int val : spotValues) {
+            Button b = new Button(String.valueOf(val));
             b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
-            b.setOnAction(e -> handleDrawSelection(i)); // correct handler
+
             buttons.add(b);
+
         }
 
         return buttons;
