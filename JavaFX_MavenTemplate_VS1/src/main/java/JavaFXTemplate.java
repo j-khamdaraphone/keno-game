@@ -38,6 +38,15 @@ public class JavaFXTemplate extends Application {
         KenoMenu kenoMenu = new KenoMenu();
         root.setTop(kenoMenu.getMenuBar());
 
+
+        welcome.getStartButton().setOnAction(e -> {
+            System.out.println("Switching to GamePlaySpot screen...");
+
+            GamePlaySpot gamePlaySpot = new GamePlaySpot();
+            Scene gameScene = new Scene(gamePlaySpot, 700, 700);
+            primaryStage.setScene(gameScene);
+
+
         kenoMenu.getRulesOfGame().setOnAction(e ->
                 kenoMenu.showPopup("Rules of Keno", Rules.getText(), root, rootPane)
         );
