@@ -101,6 +101,12 @@ public class KenoGame {
         }
     }
 
+    public void randomDraws() {
+        for (int i = 0; i < drawsToPlay; i++) {
+            performDraw();
+        }
+    }
+
     public int getSpotsToPlay() {
         return spotsToPlay;
     }
