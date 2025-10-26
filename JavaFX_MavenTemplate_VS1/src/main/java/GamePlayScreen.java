@@ -21,6 +21,7 @@ public class GamePlayScreen {
     private KenoGame game;
     private Text drawingLabel, scoreLabel;
     private boolean locked = false;
+    private Button randomPickButton;
 
     public GamePlayScreen(int spots, int draws) {
         this.spotsToPlay = spots;
@@ -32,7 +33,6 @@ public class GamePlayScreen {
         root = new BorderPane();
         root.setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
 
-        // Drawing and score labels
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         drawingLabel = new Text("DRAWING #1");
         drawingLabel.setFont(gliker);
@@ -102,23 +102,39 @@ public class GamePlayScreen {
         controls.setAlignment(Pos.CENTER);
         controls.setPadding(new Insets(20));
 
-        startDraw = new Button("START DRAW");
+        startDraw = new Button("START");
         goBack = new Button("GO BACK");
+        randomPickButton = new Button("RANDOM");
 
         styleControlButton(startDraw);
         styleControlButton(goBack);
+        styleControlButton(randomPickButton);
 
         startDraw.setOnAction(e -> startDraws());
         goBack.setOnAction(e -> System.out.println("Go back pressed"));
+        randomPickButton.setOnAction(e -> {
+            game.performRandomPick();
+            selectedNumbers.clear();
+            selectedNumbers.addAll(game.getSelectedNumbers());
 
-        controls.getChildren().addAll(startDraw, goBack);
+            for (Button btn : numberButtons.values()) {
+                int num = Integer.parseInt(btn.getText());
+                if (selectedNumbers.contains(num)) {
+                    btn.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
+                } else {
+                    btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
+                }
+            }
+        });
+
+        controls.getChildren().addAll(startDraw, randomPickButton, goBack);
         return controls;
     }
 
     private void styleControlButton(Button b) {
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         b.setFont(gliker);
-        b.setPrefSize(180, 50);
+        b.setPrefSize(250, 60);
         b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;");
         b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #ffbd59; -fx-text-fill: #01203f; -fx-background-radius: 12;"));
         b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;"));
@@ -129,7 +145,6 @@ public class GamePlayScreen {
         table.setPadding(new Insets(10));
         table.setStyle("-fx-background-color: #1a1a2e; -fx-border-color: white; -fx-border-width: 2;");
 
-        // Header row
         HBox header = new HBox(50);
         Label hitsHeader = new Label("HITS");
         hitsHeader.setTextFill(Color.WHITE);
@@ -142,7 +157,6 @@ public class GamePlayScreen {
         header.getChildren().addAll(hitsHeader, winHeader);
         table.getChildren().add(header);
 
-        // Rows for each hit
         for (int i = 0; i <= spotsToPlay; i++) {
             HBox row = new HBox(50);
 
@@ -164,13 +178,11 @@ public class GamePlayScreen {
     private void updateScoreTable(int hits) {
         VBox table = (VBox) root.getLeft();
 
-        // Reset all rows
         for (int i = 1; i < table.getChildren().size(); i++) {
             HBox row = (HBox) table.getChildren().get(i);
             row.setStyle("-fx-border-color: gray; -fx-border-width: 1; -fx-background-color: transparent;");
         }
 
-        // Highlight current hit row
         if (hits >= 0 && hits <= spotsToPlay) {
             HBox hitRow = (HBox) table.getChildren().get(hits + 1); // +1 because header
             hitRow.setStyle("-fx-border-color: gold; -fx-border-width: 2; -fx-background-color: rgba(255,215,0,0.2);");
@@ -189,6 +201,7 @@ public class GamePlayScreen {
         locked = true;
         startDraw.setDisable(true);
         goBack.setDisable(true);
+        randomPickButton.setDisable(true);
 
         performNextDraw(1);
     }
@@ -198,33 +211,49 @@ public class GamePlayScreen {
             locked = false;
             startDraw.setDisable(false);
             goBack.setDisable(false);
+            randomPickButton.setDisable(false);
             return;
         }
 
         drawingLabel.setText("DRAWING #" + drawNumber);
 
-        Set<Integer> drawResult = game.performDraw();
+        List<Integer> drawResult = new ArrayList<>(game.performDraw());
+        Collections.shuffle(drawResult);
 
         for (Button btn : numberButtons.values()) {
             int num = Integer.parseInt(btn.getText());
-            if (selectedNumbers.contains(num) && drawResult.contains(num)) {
-                btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
-            } else if (drawResult.contains(num)) {
-                btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
-            } else if (selectedNumbers.contains(num)) {
+            if (selectedNumbers.contains(num)) {
                 btn.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
             } else {
                 btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
             }
         }
 
-        updateScoreTable(game.countHits());
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(e -> performNextDraw(drawNumber + 1));
-        pause.play();
+        animateDrawNumbers(drawResult, 0, drawNumber);
     }
 
+    private void animateDrawNumbers(List<Integer> drawResult, int index, int drawNumber) {
+        if (index >= drawResult.size()) {
+            updateScoreTable(game.countHits());
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(e -> performNextDraw(drawNumber + 1));
+            pause.play();
+            return;
+        }
+
+        int number = drawResult.get(index);
+        Button btn = numberButtons.get(number);
+
+        if (selectedNumbers.contains(number)) {
+            btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
+        } else {
+            btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
+
+        PauseTransition pause = new PauseTransition(Duration.millis(300));
+        pause.setOnFinished(e -> animateDrawNumbers(drawResult, index + 1, drawNumber));
+        pause.play();
+    }
 
 
     public Button getGoBackButton() {
