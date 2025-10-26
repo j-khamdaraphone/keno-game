@@ -85,7 +85,7 @@ public class GamePlaySpot extends VBox {
             buttons.add(b);
 
             b.setOnAction(e -> {
-                selectedSpots = val;
+                selectedDrawings = val;
                 buttons.forEach(btn -> btn.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;"));
                 b.setStyle("-fx-background-color: gold; -fx-font-size: 14px; -fx-font-weight: bold;");
             });

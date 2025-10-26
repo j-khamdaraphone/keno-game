@@ -1,13 +1,13 @@
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.*;
 
 public class GamePlayScreen {
@@ -39,6 +39,7 @@ public class GamePlayScreen {
         root.setTop(menuHelper.getMenuBar());
         root.setCenter(setupGrid());
         root.setBottom(createControlButtons());
+        root.setLeft(createScoreTable());
         root.setStyle("-fx-background-color: #01203f;");
 
     }
@@ -84,6 +85,8 @@ public class GamePlayScreen {
             if (selectedNumbers.size() < spotsToPlay) {
                 selectedNumbers.add(number);
                 btn.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
+            } else {
+                System.out.println("You can only select " + spotsToPlay + " numbers.");
             }
         }
     }
@@ -97,6 +100,15 @@ public class GamePlayScreen {
 
         styleButton(startDraw);
         styleButton(goBack);
+
+        startDraw.setOnAction(e -> {
+            if (selectedNumbers.size() != spotsToPlay) {
+                System.out.println("Please select " + spotsToPlay + " numbers before starting draw!");
+                return;
+            }
+            lockSelection(); // optional: prevent further selections
+            randomDrawPicks(); // this starts the animation and shows results
+        });
 
         goBack.setOnAction(e -> {
             // TODO: handle returning to Welcome scene in JavaFXTemplate
@@ -150,7 +162,7 @@ public class GamePlayScreen {
 
     private void drawNext(Iterator<Integer> it, int drawnCount) {
         if (drawnCount >= drawingToPlay || !it.hasNext()) {
-            showResults();
+            highlightResults();
             return;
         }
 
@@ -158,11 +170,82 @@ public class GamePlayScreen {
         randomDraw.add(number);
 
         Button btn = numberButtons.get(number);
-        btn.setStyle("-fx-background-color: #ff4c4c; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        // Check if the user selected this number
+        if (selectedNumbers.contains(number)) {
+            btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
+        } else {
+            btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
 
         PauseTransition pause = new PauseTransition(Duration.millis(200));
         pause.setOnFinished(e -> drawNext(it, drawnCount + 1));
         pause.play();
+    }
+
+    private void highlightResults() {
+        int hits = 0;
+
+        for (int n : selectedNumbers) {
+            if (randomDraw.contains(n)) hits++;
+        }
+
+        // Highlight correct row in the score table
+        VBox table = (VBox) root.getLeft();
+        for (int i = 1; i < table.getChildren().size(); i++) {
+            HBox row = (HBox) table.getChildren().get(i);
+            row.setStyle((i - 1 == hits) ? "-fx-background-color: gold;" : "");
+        }
+    }
+
+    private VBox createScoreTable() {
+        VBox table = new VBox(5);
+        table.setPadding(new Insets(10));
+        table.setStyle("-fx-background-color: #1a1a2e; -fx-border-color: white; -fx-border-width: 1;");
+
+        // Header
+        HBox header = new HBox(50);
+        header.getChildren().addAll(
+                createLabel("HITS", true),
+                createLabel("WIN", true)
+        );
+        table.getChildren().add(header);
+
+        for (int i = 1; i <= spotsToPlay; i++) {
+            HBox row = new HBox(50);
+            row.getChildren().addAll(
+                    createLabel(String.valueOf(i), false),
+                    createLabel(String.valueOf(calculateWin(i)), false)
+            );
+            table.getChildren().add(row);
+        }
+
+        return table;
+    }
+
+    private Label createLabel(String text, boolean bold) {
+        Label lbl = new Label(text);
+        lbl.setTextFill(Color.WHITE);
+        if (bold) lbl.setStyle("-fx-font-weight: bold;");
+        return lbl;
+    }
+
+    private int calculateWin(int hits) {
+        // Example: you can adjust the payouts for each possible number of hits
+        switch (hits) {
+            case 0: return 0;
+            case 1: return 2;
+            case 2: return 5;
+            case 3: return 20;
+            case 4: return 100;
+            case 5: return 200;
+            case 6: return 500;
+            case 7: return 1000;
+            case 8: return 2000;
+            case 9: return 5000;
+            case 10: return 10000;
+            default: return 0;
+        }
     }
 
     private void showResults() {
@@ -170,15 +253,25 @@ public class GamePlayScreen {
         for (int n : selectedNumbers) {
             if (randomDraw.contains(n)) hits++;
         }
-        showAlert("Game Over", "You hit " + hits + " out of " + spotsToPlay + "!");
-    }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // Highlight score table
+        VBox table = (VBox) root.getLeft();
+        for (int i = 1; i < spotsToPlay; i++) { // skip header
+            HBox row = (HBox) table.getChildren().get(i);
+            if (i-1 == hits) { // row index corresponds to hits
+                row.setStyle("-fx-background-color: gold;");
+            } else {
+                row.setStyle(""); // reset other rows
+            }
+        }
+
+        // Highlight user-selected numbers that did NOT hit
+        for (int n : selectedNumbers) {
+            if (!randomDraw.contains(n)) {
+                Button btn = numberButtons.get(n);
+                btn.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+            }
+        }
     }
 
 
