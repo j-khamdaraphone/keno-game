@@ -20,7 +20,7 @@ public class GamePlaySpot extends VBox {
     private List<Button> spotOptions;
     private List<Button> drawOptions;
     private Button nextButton;
-    private KenoMenu menuHelper;
+
     private int selectedSpots = 0;
     private int selectedDrawings = 0;
 
@@ -39,7 +39,7 @@ public class GamePlaySpot extends VBox {
         title2.setFont(gliker);
         title2.setFill(Color.web("#ffbd59"));
 
-        menuHelper= new KenoMenu();
+
 
         spotOptions = createSpotButtons();
         drawOptions = createDrawButtons();
@@ -60,7 +60,7 @@ public class GamePlaySpot extends VBox {
         spacer.setPrefHeight(20);
 
         getChildren().addAll(
-                menuHelper.getMenuBar(),
+
                 title1,
                 spotBox,
                 title2,
