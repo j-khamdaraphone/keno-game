@@ -201,6 +201,7 @@ public class GamePlayScreen {
         locked = true;
         startDraw.setDisable(true);
         goBack.setDisable(true);
+        randomPickButton.setDisable(true);
 
         performNextDraw(1);
     }
@@ -210,6 +211,7 @@ public class GamePlayScreen {
             locked = false;
             startDraw.setDisable(false);
             goBack.setDisable(false);
+            randomPickButton.setDisable(false);
             return;
         }
 
