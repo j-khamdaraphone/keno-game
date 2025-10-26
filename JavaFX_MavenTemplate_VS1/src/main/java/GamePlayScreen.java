@@ -1,6 +1,7 @@
 import javafx.animation.PauseTransition;
 import javafx.geometry.*;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -17,9 +18,9 @@ public class GamePlayScreen {
     private Set<Integer> selectedNumbers;
     private int spotsToPlay;
     private int drawsToPlay;
-    private Text scoreLabel, drawingLabel;
-    private boolean locked = false;
     private KenoGame game;
+    private Text drawingLabel, scoreLabel;
+    private boolean locked = false;
 
     public GamePlayScreen(int spots, int draws) {
         this.spotsToPlay = spots;
@@ -29,17 +30,17 @@ public class GamePlayScreen {
         this.game = new KenoGame(spots, draws);
 
         root = new BorderPane();
-        root.setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
+        root.setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
 
+        // Drawing and score labels
+        Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         drawingLabel = new Text("DRAWING #1");
-        drawingLabel.setFont(Font.font("Arial", 20));
-        drawingLabel.setFill(Color.WHITE);
-        drawingLabel.setStyle("-fx-font-weight: bold;");
+        drawingLabel.setFont(gliker);
+        drawingLabel.setFill(Color.web("#ffbd59"));
 
         scoreLabel = new Text("Score: 0");
-        scoreLabel.setFont(Font.font("Arial", 16));
+        scoreLabel.setFont(gliker);
         scoreLabel.setFill(Color.WHITE);
-        scoreLabel.setStyle("-fx-font-weight: bold;");
 
         HBox topBox = new HBox(20);
         Region spacer = new Region();
@@ -47,7 +48,7 @@ public class GamePlayScreen {
         VBox leftBox = new VBox(drawingLabel);
         leftBox.setSpacing(5);
         topBox.getChildren().addAll(leftBox, spacer, scoreLabel);
-        topBox.setPadding(new Insets(5));
+        topBox.setPadding(new Insets(10));
         topBox.setAlignment(Pos.CENTER_LEFT);
 
         root.setTop(topBox);
@@ -77,7 +78,6 @@ public class GamePlayScreen {
             numberButtons.put(num, btn);
             grid.add(btn, (i - 1) % 10, (i - 1) / 10);
         }
-
         return grid;
     }
 
@@ -85,6 +85,7 @@ public class GamePlayScreen {
         if (locked) return;
 
         Button btn = numberButtons.get(number);
+
         if (selectedNumbers.contains(number)) {
             selectedNumbers.remove(number);
             btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
@@ -101,52 +102,83 @@ public class GamePlayScreen {
         controls.setAlignment(Pos.CENTER);
         controls.setPadding(new Insets(20));
 
-        startDraw = new Button("Start Draw");
-        goBack = new Button("Go Back");
+        startDraw = new Button("START DRAW");
+        goBack = new Button("GO BACK");
 
-        styleButton(startDraw);
-        styleButton(goBack);
+        styleControlButton(startDraw);
+        styleControlButton(goBack);
 
         startDraw.setOnAction(e -> startDraws());
+        goBack.setOnAction(e -> System.out.println("Go back pressed"));
 
         controls.getChildren().addAll(startDraw, goBack);
         return controls;
     }
 
-    private void styleButton(Button btn) {
-        btn.setFont(Font.font("Arial", 15));
-        btn.setPrefWidth(140);
-        btn.setStyle("-fx-background-color: #34568B; -fx-text-fill: white; -fx-background-radius: 8;");
-        btn.setOnMouseEntered(e -> btn.setStyle("-fx-background-color: #4A6FA5; -fx-text-fill: white; -fx-background-radius: 8;"));
-        btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: #34568B; -fx-text-fill: white; -fx-background-radius: 8;"));
+    private void styleControlButton(Button b) {
+        Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
+        b.setFont(gliker);
+        b.setPrefSize(300, 60);
+        b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;");
+        b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #ffbd59; -fx-text-fill: #01203f; -fx-background-radius: 12;"));
+        b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;"));
     }
 
     private VBox createScoreTable() {
         VBox table = new VBox(5);
         table.setPadding(new Insets(10));
-        table.setStyle("-fx-background-color: #1a1a2e; -fx-border-color: white; -fx-border-width: 1;");
+        table.setStyle("-fx-background-color: #1a1a2e; -fx-border-color: white; -fx-border-width: 2;");
 
-        // Header
+        // Header row
         HBox header = new HBox(50);
-        Label lblHits = new Label("HITS");
-        Label lblWin = new Label("WIN");
-        lblHits.setTextFill(Color.WHITE);
-        lblWin.setTextFill(Color.WHITE);
-        header.getChildren().addAll(lblHits, lblWin);
+        Label hitsHeader = new Label("HITS");
+        hitsHeader.setTextFill(Color.WHITE);
+        hitsHeader.setStyle("-fx-font-weight: bold;");
+
+        Label winHeader = new Label("WIN");
+        winHeader.setTextFill(Color.WHITE);
+        winHeader.setStyle("-fx-font-weight: bold;");
+
+        header.getChildren().addAll(hitsHeader, winHeader);
         table.getChildren().add(header);
 
+        // Rows for each hit
         for (int i = 0; i <= spotsToPlay; i++) {
             HBox row = new HBox(50);
-            Label lHits = new Label(String.valueOf(i));
-            Label lWin = new Label(String.valueOf(game.calculateWin(i)));
-            lHits.setTextFill(Color.web("#bbbbbb"));
-            lWin.setTextFill(Color.web("#bbbbbb"));
-            row.getChildren().addAll(lHits, lWin);
+
+            Label hits = new Label(String.valueOf(i));
+            hits.setTextFill(Color.WHITE);
+
+            Label win = new Label(String.valueOf(game.calculateWin(i)));
+            win.setTextFill(Color.WHITE);
+
+            row.getChildren().addAll(hits, win);
+            row.setPadding(new Insets(2, 5, 2, 5));
+            row.setStyle("-fx-border-color: gray; -fx-border-width: 1;"); // outline
             table.getChildren().add(row);
         }
 
         return table;
     }
+
+    private void updateScoreTable(int hits) {
+        VBox table = (VBox) root.getLeft();
+
+        // Reset all rows
+        for (int i = 1; i < table.getChildren().size(); i++) {
+            HBox row = (HBox) table.getChildren().get(i);
+            row.setStyle("-fx-border-color: gray; -fx-border-width: 1; -fx-background-color: transparent;");
+        }
+
+        // Highlight current hit row
+        if (hits >= 0 && hits <= spotsToPlay) {
+            HBox hitRow = (HBox) table.getChildren().get(hits + 1); // +1 because header
+            hitRow.setStyle("-fx-border-color: gold; -fx-border-width: 2; -fx-background-color: rgba(255,215,0,0.2);");
+        }
+
+        scoreLabel.setText("Score: " + game.getTotalScore());
+    }
+
 
     private void startDraws() {
         if (selectedNumbers.size() != spotsToPlay) {
@@ -163,16 +195,15 @@ public class GamePlayScreen {
 
     private void performNextDraw(int drawNumber) {
         if (drawNumber > drawsToPlay) {
+            locked = false;
             startDraw.setDisable(false);
             goBack.setDisable(false);
-            locked = false;
             return;
         }
 
         drawingLabel.setText("DRAWING #" + drawNumber);
 
         Set<Integer> drawResult = game.performDraw();
-        int hits = game.countHits();
 
         for (Button btn : numberButtons.values()) {
             int num = Integer.parseInt(btn.getText());
@@ -181,47 +212,19 @@ public class GamePlayScreen {
             } else if (drawResult.contains(num)) {
                 btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
             } else if (selectedNumbers.contains(num)) {
-                btn.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+                btn.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
             } else {
                 btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
             }
         }
 
-        updateScoreTable(hits);
+        updateScoreTable(game.countHits());
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         pause.setOnFinished(e -> performNextDraw(drawNumber + 1));
         pause.play();
     }
 
-    private void updateScoreTable(int hits) {
-        VBox table = (VBox) root.getLeft();
-
-        for (int i = 1; i < table.getChildren().size(); i++) {
-            HBox row = (HBox) table.getChildren().get(i);
-            row.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
-            for (javafx.scene.Node node : row.getChildren()) {
-                if (node instanceof Label) {
-                    ((Label) node).setTextFill(Color.web("#bbbbbb"));
-                }
-            }
-        }
-
-        if (hits >= 0 && hits <= spotsToPlay) {
-            int rowIndex = hits + 1; // skip header
-            if (rowIndex < table.getChildren().size()) {
-                HBox hitRow = (HBox) table.getChildren().get(rowIndex);
-                hitRow.setStyle("-fx-border-color: gold; -fx-border-width: 2; -fx-background-color: transparent;");
-                for (javafx.scene.Node node : hitRow.getChildren()) {
-                    if (node instanceof Label) {
-                        ((Label) node).setTextFill(Color.web("#dddd00"));
-                    }
-                }
-            }
-        }
-
-        scoreLabel.setText("Score: " + game.getTotalScore());
-    }
 
     public Button getGoBackButton() {
         return goBack;

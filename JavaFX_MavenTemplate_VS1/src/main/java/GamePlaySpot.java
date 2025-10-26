@@ -11,26 +11,35 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
+import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.layout.Region;
 
 public class GamePlaySpot extends VBox {
     private List<Button> spotOptions;
     private List<Button> drawOptions;
     private Button nextButton;
-    private KenoMenu menuHelper;
+
     private int selectedSpots = 0;
     private int selectedDrawings = 0;
 
     public GamePlaySpot() {
         setSpacing(25);
         setPadding(new Insets(20));
-        setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
+        setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
+        setAlignment(Pos.CENTER);
 
-        Text title = new Text("Keno: Select Game Options!");
-        title.setFont(Font.font("Gliker", 32));
-        title.setStyle("-fx-fill: white;");
-        FontLoader.loadFonts();
+        Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 32);
 
-        menuHelper= new KenoMenu();
+        Text title1 = new Text("SELECT PICK");
+        Text title2 = new Text("SELECT DRAWINGS");
+        title1.setFont(gliker);
+        title1.setFill(Color.web("#ffbd59"));
+        title2.setFont(gliker);
+        title2.setFill(Color.web("#ffbd59"));
+
+
 
         spotOptions = createSpotButtons();
         drawOptions = createDrawButtons();
@@ -38,17 +47,25 @@ public class GamePlaySpot extends VBox {
 
         HBox spotBox = new HBox(10);
         spotBox.getChildren().addAll(spotOptions);
+        spotBox.setAlignment(Pos.CENTER);
         HBox drawBox = new HBox(10);
         drawBox.getChildren().addAll(drawOptions);
+        drawBox.setAlignment(Pos.CENTER);
 
-        nextButton = new Button("Next");
-        nextButton.setStyle("-fx-background-color: gold; -fx-font-size: 16px; -fx-font-weight: bold;");
+        nextButton = new Button("NEXT");
+        styleOptionButton(nextButton, gliker, false);
+        nextButton.setPrefSize(140, 60);
+
+        Region spacer = new Region();
+        spacer.setPrefHeight(20);
 
         getChildren().addAll(
-                //menuHelper.getMenuBar(),
-                title,
-                new Text("Select Spots:"), spotBox,
-                new Text("Select Drawings:"), drawBox,
+
+                title1,
+                spotBox,
+                title2,
+                drawBox,
+                spacer,
                 nextButton
         );
 
@@ -58,14 +75,18 @@ public class GamePlaySpot extends VBox {
         List<Integer> spotValues = List.of(1, 4, 8, 10);
         List<Button> buttons = new ArrayList<>();
 
+        Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 24);
+
         for (int val : spotValues) {
             Button b = new Button(String.valueOf(val));
-            b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
+            styleOptionButton(b, gliker, false);
 
             b.setOnAction(e -> {
                 selectedSpots = val;
-                buttons.forEach(btn -> btn.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;"));
-                b.setStyle("-fx-background-color: gold; -fx-font-size: 14px; -fx-font-weight: bold;");
+                for (Button btn : buttons) {
+                    styleOptionButton(btn, gliker, false);
+                }
+                styleOptionButton(b, gliker, true);
             });
             buttons.add(b);
 
@@ -75,25 +96,44 @@ public class GamePlaySpot extends VBox {
     }
 
     private List<Button> createDrawButtons() {
-        List<Integer> spotValues = List.of(1, 4, 8, 10);
+        List<Integer> drawValues = List.of(1, 4, 8, 10);
         List<Button> buttons = new ArrayList<>();
+        Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 24);
 
-        for (int val : spotValues) {
+        for (int val : drawValues) {
             Button b = new Button(String.valueOf(val));
-            b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
-
+            styleOptionButton(b, gliker, false);
             buttons.add(b);
 
             b.setOnAction(e -> {
                 selectedDrawings = val;
-                buttons.forEach(btn -> btn.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;"));
-                b.setStyle("-fx-background-color: gold; -fx-font-size: 14px; -fx-font-weight: bold;");
+                for (Button btn : buttons) {
+                    styleOptionButton(btn, gliker, false);
+                }
+                styleOptionButton(b, gliker, true);
             });
         }
 
         return buttons;
     }
 
+    private void styleOptionButton(Button b, Font font, boolean selected) {
+        b.setFont(font);
+        if (selected) {
+            b.setStyle(
+                    "-fx-background-color: #ffbd59;" +
+                            "-fx-text-fill: #01203f;" +
+                            "-fx-background-radius: 12;"
+            );
+        } else {
+            b.setStyle(
+                    "-fx-background-color: #01203f;" +
+                            "-fx-text-fill: #ffbd59;" +
+                            "-fx-background-radius: 12;"
+            );
+        }
+        b.setPrefSize(100, 60);
+    }
 
 
     public Button getNextButton() { return nextButton; }
