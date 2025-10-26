@@ -45,7 +45,7 @@ public class GamePlayScreen {
         currentDraw = 0;
 
         root = new BorderPane();
-        root.setStyle("-fx-background-color: #01203f;");
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
 
         drawingLabel = new Text("DRAWING #1");
         drawingLabel.setFont(Font.font("Arial", 20));

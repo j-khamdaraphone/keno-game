@@ -25,7 +25,7 @@ public class GamePlaySpot extends VBox {
     public GamePlaySpot() {
         setSpacing(25);
         setPadding(new Insets(20));
-        setStyle("-fx-background-color: linear-gradient(to bottom, #003366, #001a33);");
+        setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
 
         Text title = new Text("Keno: Select Game Options!");
         title.setStyle("-fx-font-size: 24px; -fx-fill: white; -fx-font-weight: bold;");
