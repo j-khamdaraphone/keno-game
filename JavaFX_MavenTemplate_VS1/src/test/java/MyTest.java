@@ -44,5 +44,35 @@ class MyTest {
         assertThrows(IllegalArgumentException.class, () -> game.selectNumbers(myNumbers));
     }
 
+    @Test
+    void performDrawHits() {
+        Set<Integer> myNumbers = Set.of(1, 2, 3, 4, 5);
+        game.selectNumbers(myNumbers);
+        Set<Integer> draw = game.performDraw();
+        assertNotNull(draw, "Draw should not be null");
+        assertEquals(5, draw.size(), "Draw should contain exactly the number of spots played");
 
+        int hits = game.countHits();
+        assertTrue(hits >= 0 && hits <= 5, "Hits should be within valid range");
+    }
+
+    @Test
+    void totalScoreAccumulates() {
+        Set<Integer> myNumbers = Set.of(1, 2, 3, 4, 5);
+        game.selectNumbers(myNumbers);
+        int before = game.getTotalScore();
+        game.performDraw();
+        assertTrue(game.getTotalScore() >= before, "Total score should increase or stay the same after draw");
+    }
+
+    void multipleDraws() {
+        Set<Integer> myNumbers = Set.of(1, 2, 3, 4, 5);
+        game.selectNumbers(myNumbers);
+        int total = 0;
+        for (int i = 0; i < 3; i++) { // perform all 3 draws
+            game.performDraw();
+            total += game.getTotalScore();
+        }
+        assertTrue(total >= 0, "Total score after multiple draws should be non-negative");
+    }
 }
