@@ -10,9 +10,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.text.Text;
-
-
-
+import javafx.scene.text.Font;
 
 public class GamePlaySpot extends VBox {
     private List<Button> spotOptions;
@@ -28,7 +26,9 @@ public class GamePlaySpot extends VBox {
         setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
 
         Text title = new Text("Keno: Select Game Options!");
-        title.setStyle("-fx-font-size: 24px; -fx-fill: white; -fx-font-weight: bold;");
+        title.setFont(Font.font("Gliker", 32));
+        title.setStyle("-fx-fill: white;");
+        FontLoader.loadFonts();
 
         menuHelper= new KenoMenu();
 
@@ -99,6 +99,5 @@ public class GamePlaySpot extends VBox {
     public Button getNextButton() { return nextButton; }
     public int getSelectedSpots() { return selectedSpots; }
     public int getSelectedDrawings() { return selectedDrawings; }
-
 
 }

@@ -41,6 +41,7 @@ public class Welcome {
 
     public StackPane createWelcomeScreen() {
         StackPane stack = new StackPane();
+        stack.setStyle("-fx-background-color: linear-gradient(to bottom right, #4B0082, #8A2BE2, #FF69B4);");
         stack.getChildren().addAll(kenoImage, startButton); // add button here
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
         startButton.setTranslateY(-150); // move it up a bit from bottom
