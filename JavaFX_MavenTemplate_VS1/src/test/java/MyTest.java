@@ -65,6 +65,7 @@ class MyTest {
         assertTrue(game.getTotalScore() >= before, "Total score should increase or stay the same after draw");
     }
 
+    @Test
     void multipleDraws() {
         Set<Integer> myNumbers = Set.of(1, 2, 3, 4, 5);
         game.selectNumbers(myNumbers);
@@ -75,4 +76,34 @@ class MyTest {
         }
         assertTrue(total >= 0, "Total score after multiple draws should be non-negative");
     }
+
+    @Test
+    void maxSpotDraw() {
+        KenoGame game = new KenoGame(10, 3);
+        Set<Integer> nums = Set.of(1,2,3,4,5,6,7,8,9,10);
+        game.selectNumbers(nums);
+        Set<Integer> draw = game.performDraw();
+        assertEquals(10, draw.size(), "Draw should have exactly 10 numbers");
+    }
+
+    @Test
+    void singleSpotDraw() {
+        KenoGame game = new KenoGame(1, 3);
+        Set<Integer> nums = Set.of(50);
+        game.selectNumbers(nums);
+        Set<Integer> draw = game.performDraw();
+        assertEquals(1, draw.size(), "Draw should have exactly 1 number");
+    }
+
+    @Test
+    void hitsWithinRange() {
+        KenoGame game = new KenoGame(5, 3);
+        Set<Integer> nums = Set.of(1, 2, 3, 4, 5);
+        game.selectNumbers(nums);
+        game.performDraw();
+        int hits = game.countHits();
+        assertTrue(hits >= 0 && hits <= 5, "Hits should always be within 0 to 5");
+    }
+
+
 }
