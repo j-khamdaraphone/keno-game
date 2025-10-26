@@ -45,7 +45,7 @@ public class GamePlaySpot extends VBox {
         nextButton.setStyle("-fx-background-color: gold; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         getChildren().addAll(
-                menuHelper.getMenuBar(),
+                //menuHelper.getMenuBar(),
                 title,
                 new Text("Select Spots:"), spotBox,
                 new Text("Select Drawings:"), drawBox,

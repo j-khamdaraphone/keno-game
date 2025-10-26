@@ -43,6 +43,7 @@ public class JavaFXTemplate extends Application {
             System.out.println("Switching to GamePlaySpot screen...");
             gamePlaySpot = new GamePlaySpot();
 
+            // Set up the Next button
             gamePlaySpot.getNextButton().setOnAction(nextEvent -> {
                 int spots = gamePlaySpot.getSelectedSpots();
                 int draws = gamePlaySpot.getSelectedDrawings();
@@ -53,13 +54,20 @@ public class JavaFXTemplate extends Application {
                 }
 
                 GamePlayScreen gamePlayScreen = new GamePlayScreen(spots, draws);
-                Scene gameScene = new Scene(gamePlayScreen.getRoot(), 700, 700);
-                primaryStage.setScene(gameScene);
+
+                // Go Back button action
+                gamePlayScreen.getGoBackButton().setOnAction(backEvent -> {
+                    // Return to GamePlaySpot
+                    root.setCenter(gamePlaySpot); // <-- reset the center of BorderPane
+                });
+
+                root.setCenter(gamePlayScreen.getRoot()); // <-- show gameplay screen
+            });
+
+            root.setCenter(gamePlaySpot); // <-- show gamePlaySpot
         });
 
-        Scene gameScene = new Scene(gamePlaySpot, 700, 700);
-        primaryStage.setScene(gameScene);
-        });
+
         kenoMenu.getRulesOfGame().setOnAction(e ->
                 kenoMenu.showPopup("Rules of Keno", Rules.getText(), root, rootPane)
         );
@@ -76,8 +84,6 @@ public class JavaFXTemplate extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-		
 
 
     }
