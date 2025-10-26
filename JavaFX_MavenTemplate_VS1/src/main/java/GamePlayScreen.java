@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.text.Text;
 import java.util.*;
 
 public class GamePlayScreen {
@@ -24,6 +25,12 @@ public class GamePlayScreen {
     private boolean locked;
     private int score;
     private HBox controls;
+    private Text drawingLabel;
+    private boolean isDrawing = false;
+    private int currentDraw = 0;
+    private int totalScore = 0;
+    private Text scoreLabel;
+
 
     public GamePlayScreen(int spots, int draws) {
         menuHelper = new KenoMenu();
@@ -34,13 +41,35 @@ public class GamePlayScreen {
         randomDraw = new HashSet<>();
         locked = false;
         score = 0;
+        totalScore = 0;
+        currentDraw = 0;
 
         root = new BorderPane();
-        root.setTop(menuHelper.getMenuBar());
+        root.setStyle("-fx-background-color: #01203f;");
+
+        drawingLabel = new Text("DRAWING #1");
+        drawingLabel.setFont(Font.font("Arial", 20));
+        drawingLabel.setFill(Color.WHITE);
+        drawingLabel.setStyle("-fx-font-weight: bold;");
+
+        scoreLabel = new Text("Score: 0");
+        scoreLabel.setFont(Font.font("Arial", 16));
+        scoreLabel.setFill(Color.WHITE);
+        scoreLabel.setStyle("-fx-font-weight: bold;");
+
+        HBox topBox = new HBox(20);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS); // pushes scoreLabel to the right
+        VBox leftBox = new VBox(menuHelper.getMenuBar(), drawingLabel);
+        leftBox.setSpacing(5);
+        topBox.getChildren().addAll(leftBox, spacer, scoreLabel);
+        topBox.setPadding(new Insets(5));
+        topBox.setAlignment(Pos.CENTER_LEFT);
+
+        root.setTop(topBox);
         root.setCenter(setupGrid());
         root.setBottom(createControlButtons());
         root.setLeft(createScoreTable());
-        root.setStyle("-fx-background-color: #01203f;");
 
     }
 
@@ -107,7 +136,7 @@ public class GamePlayScreen {
                 return;
             }
             lockSelection(); // optional: prevent further selections
-            randomDrawPicks(); // this starts the animation and shows results
+            startDrawings(); // this starts the animation and shows results
         });
 
         goBack.setOnAction(e -> {
@@ -151,11 +180,16 @@ public class GamePlayScreen {
         randomDraw = new HashSet<>();
         Random rand = new Random();
 
+        // Mark user numbers as yellow before drawing
+        for (int n : selectedNumbers) {
+            Button b = numberButtons.get(n);
+            b.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+        }
+
         List<Integer> allNumbers = new ArrayList<>();
         for (int i = 1; i <= 80; i++) allNumbers.add(i);
         Collections.shuffle(allNumbers);
 
-        // Animate drawing numbers
         Iterator<Integer> it = allNumbers.iterator();
         drawNext(it, 0);
     }
@@ -171,10 +205,11 @@ public class GamePlayScreen {
 
         Button btn = numberButtons.get(number);
 
-        // Check if the user selected this number
+        // If user selected this number → hit → green
         if (selectedNumbers.contains(number)) {
             btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
         } else {
+            // Drawn number not selected by user → red
             btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
         }
 
@@ -183,14 +218,14 @@ public class GamePlayScreen {
         pause.play();
     }
 
-    private void highlightResults() {
-        int hits = 0;
 
+    private void highlightResults() {
+        // Optional: highlight score table if you have it
+        int hits = 0;
         for (int n : selectedNumbers) {
             if (randomDraw.contains(n)) hits++;
         }
 
-        // Highlight correct row in the score table
         VBox table = (VBox) root.getLeft();
         for (int i = 1; i < table.getChildren().size(); i++) {
             HBox row = (HBox) table.getChildren().get(i);
@@ -211,7 +246,7 @@ public class GamePlayScreen {
         );
         table.getChildren().add(header);
 
-        for (int i = 1; i <= spotsToPlay; i++) {
+        for (int i = 0; i <= spotsToPlay; i++) {
             HBox row = new HBox(50);
             row.getChildren().addAll(
                     createLabel(String.valueOf(i), false),
@@ -274,5 +309,93 @@ public class GamePlayScreen {
         }
     }
 
+    private void startDrawings() {
+        startDraw.setDisable(true);
+        goBack.setDisable(true);
+        isDrawing = true;
+        currentDraw = 1;
+        totalScore = 0;
+        startNextDrawing();
+    }
+
+    private void startNextDrawing() {
+        if (currentDraw > drawingToPlay) {
+            // All drawings complete
+            isDrawing = false;
+            startDraw.setDisable(false);
+            goBack.setDisable(false);
+            return;
+        }
+
+        drawingLabel.setText("DRAWING #" + currentDraw);
+
+        // Clear previous winner highlights
+        for (Button btn : numberButtons.values()) {
+            if (!selectedNumbers.contains(Integer.parseInt(btn.getText()))) {
+                btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white;");
+            } else {
+                btn.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+            }
+        }
+
+        Set<Integer> winners = new HashSet<>();
+        Random rand = new Random();
+        while (winners.size() < spotsToPlay) {
+            winners.add(rand.nextInt(80) + 1);
+        }
+
+        List<Integer> winnerList = new ArrayList<>(winners);
+        animateWinners(winnerList, 0, winners);
+    }
+
+    private void animateWinners(List<Integer> winnerList, int index, Set<Integer> winners) {
+        if (index >= winnerList.size()) {
+            int hits = 0;
+            for (int n : selectedNumbers) {
+                if (winners.contains(n)) hits++;
+            }
+
+            totalScore += calculateWin(hits);
+            updateScoreTable(hits);
+
+            currentDraw++;
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(e -> startNextDrawing());
+            pause.play();
+            return;
+        }
+
+        int num = winnerList.get(index);
+        Button btn = numberButtons.get(num);
+
+        if (selectedNumbers.contains(num)) {
+            btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
+        } else {
+            btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
+
+        PauseTransition pause = new PauseTransition(Duration.millis(300));
+        pause.setOnFinished(e -> animateWinners(winnerList, index + 1, winners));
+        pause.play();
+    }
+
+    private void updateScoreTable(int hits) {
+        VBox table = (VBox) root.getLeft();
+
+        // Reset all rows
+        for (int i = 1; i < table.getChildren().size(); i++) {
+            HBox row = (HBox) table.getChildren().get(i);
+            row.setStyle(""); // clear previous highlight
+        }
+
+        // Highlight correct row based on hits
+        if (hits >= 0 && hits <= spotsToPlay) {
+            HBox hitRow = (HBox) table.getChildren().get(hits + 1); // +1 because 0th is header
+            hitRow.setStyle("-fx-background-color: gold;");
+        }
+
+        // Update score label
+        scoreLabel.setText("Score: " + totalScore);
+    }
 
 }
