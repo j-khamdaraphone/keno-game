@@ -1,4 +1,5 @@
 Odds.class
+FontLoader.class
 GamePlaySpot.class
 Welcome.class
 Rules.class

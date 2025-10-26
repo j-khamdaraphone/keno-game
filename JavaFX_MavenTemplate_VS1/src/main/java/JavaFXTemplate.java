@@ -47,6 +47,11 @@ public class JavaFXTemplate extends Application {
                 int spots = gamePlaySpot.getSelectedSpots();
                 int draws = gamePlaySpot.getSelectedDrawings();
 
+                if (spots == 0 || draws == 0) {
+                    System.out.println("Please select both spots and drawings!");
+                    return;
+                }
+
                 GamePlayScreen gamePlayScreen = new GamePlayScreen(spots, draws);
                 Scene gameScene = new Scene(gamePlayScreen.getRoot(), 700, 700);
                 primaryStage.setScene(gameScene);
