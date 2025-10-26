@@ -1,8 +1,13 @@
 import javafx.animation.PauseTransition;
+<<<<<<< HEAD
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+=======
+import javafx.geometry.*;
+import javafx.scene.control.*;
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,9 +24,9 @@ public class GamePlayScreen {
     private Set<Integer> selectedNumbers;
     private int spotsToPlay;
     private int drawsToPlay;
-    private KenoGame game;
-    private Text drawingLabel, scoreLabel;
+    private Text scoreLabel, drawingLabel;
     private boolean locked = false;
+    private KenoGame game;
 
     public GamePlayScreen(int spots, int draws) {
         menuHelper = new KenoMenu();
@@ -95,7 +100,6 @@ public class GamePlayScreen {
         if (locked) return;
 
         Button btn = numberButtons.get(number);
-
         if (selectedNumbers.contains(number)) {
             // Unselect → revert to original style
             selectedNumbers.remove(number);
@@ -121,6 +125,7 @@ public class GamePlayScreen {
         styleButton(startDraw);
         styleButton(goBack);
 
+<<<<<<< HEAD
         startDraw.setOnAction(e -> {
             if (selectedNumbers.size() != spotsToPlay) {
                 System.out.println("Please select " + spotsToPlay + " numbers before starting draw!");
@@ -129,6 +134,9 @@ public class GamePlayScreen {
             lockSelection(); // optional: prevent further selections
             startDrawings(); // this starts the animation and shows results
         });
+=======
+        startDraw.setOnAction(e -> startDraws());
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
 
         controls.getChildren().addAll(startDraw, goBack);
         return controls;
@@ -140,6 +148,7 @@ public class GamePlayScreen {
         btn.setStyle("-fx-background-color: #34568B; -fx-text-fill: white; -fx-background-radius: 8;");
         btn.setOnMouseEntered(e -> btn.setStyle("-fx-background-color: #4A6FA5; -fx-text-fill: white; -fx-background-radius: 8;"));
         btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: #34568B; -fx-text-fill: white; -fx-background-radius: 8;"));
+<<<<<<< HEAD
     }
 
     private void autoPick() {
@@ -217,6 +226,8 @@ public class GamePlayScreen {
             HBox row = (HBox) table.getChildren().get(i);
             row.setStyle((i - 1 == hits) ? "-fx-background-color: gold;" : "");
         }
+=======
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
     }
 
     private VBox createScoreTable() {
@@ -226,24 +237,41 @@ public class GamePlayScreen {
 
         // Header
         HBox header = new HBox(50);
+<<<<<<< HEAD
         header.getChildren().addAll(
                 createLabel("HITS", true),
                 createLabel("WIN", true)
         );
+=======
+        Label lblHits = new Label("HITS");
+        Label lblWin = new Label("WIN");
+        lblHits.setTextFill(Color.WHITE);
+        lblWin.setTextFill(Color.WHITE);
+        header.getChildren().addAll(lblHits, lblWin);
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
         table.getChildren().add(header);
 
         for (int i = 0; i <= spotsToPlay; i++) {
             HBox row = new HBox(50);
+<<<<<<< HEAD
             row.getChildren().addAll(
                     createLabel(String.valueOf(i), false),
                     createLabel(String.valueOf(calculateWin(i)), false)
             );
+=======
+            Label lHits = new Label(String.valueOf(i));
+            Label lWin = new Label(String.valueOf(game.calculateWin(i)));
+            lHits.setTextFill(Color.web("#bbbbbb"));
+            lWin.setTextFill(Color.web("#bbbbbb"));
+            row.getChildren().addAll(lHits, lWin);
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
             table.getChildren().add(row);
         }
 
         return table;
     }
 
+<<<<<<< HEAD
     private Label createLabel(String text, boolean bold) {
         Label lbl = new Label(text);
         lbl.setTextFill(Color.WHITE);
@@ -362,12 +390,58 @@ public class GamePlayScreen {
 
         PauseTransition pause = new PauseTransition(Duration.millis(300));
         pause.setOnFinished(e -> animateWinners(winnerList, index + 1, winners));
+=======
+    private void startDraws() {
+        if (selectedNumbers.size() != spotsToPlay) {
+            System.out.println("Select exactly " + spotsToPlay + " numbers!");
+            return;
+        }
+
+        locked = true;
+        startDraw.setDisable(true);
+        goBack.setDisable(true);
+
+        performNextDraw(1);
+    }
+
+    private void performNextDraw(int drawNumber) {
+        if (drawNumber > drawsToPlay) {
+            startDraw.setDisable(false);
+            goBack.setDisable(false);
+            locked = false;
+            return;
+        }
+
+        drawingLabel.setText("DRAWING #" + drawNumber);
+
+        Set<Integer> drawResult = game.performDraw();
+        int hits = game.countHits();
+
+        for (Button btn : numberButtons.values()) {
+            int num = Integer.parseInt(btn.getText());
+            if (selectedNumbers.contains(num) && drawResult.contains(num)) {
+                btn.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold;");
+            } else if (drawResult.contains(num)) {
+                btn.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;");
+            } else if (selectedNumbers.contains(num)) {
+                btn.setStyle("-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold;");
+            } else {
+                btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
+            }
+        }
+
+        updateScoreTable(hits);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> performNextDraw(drawNumber + 1));
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
         pause.play();
     }
 
     private void updateScoreTable(int hits) {
         VBox table = (VBox) root.getLeft();
 
+<<<<<<< HEAD
         // Reset all rows
         for (int i = 1; i < table.getChildren().size(); i++) {
             HBox row = (HBox) table.getChildren().get(i);
@@ -382,6 +456,32 @@ public class GamePlayScreen {
 
         // Update score label
         scoreLabel.setText("Score: " + totalScore);
+=======
+        for (int i = 1; i < table.getChildren().size(); i++) {
+            HBox row = (HBox) table.getChildren().get(i);
+            row.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+            for (javafx.scene.Node node : row.getChildren()) {
+                if (node instanceof Label) {
+                    ((Label) node).setTextFill(Color.web("#bbbbbb"));
+                }
+            }
+        }
+
+        if (hits >= 0 && hits <= spotsToPlay) {
+            int rowIndex = hits + 1; // skip header
+            if (rowIndex < table.getChildren().size()) {
+                HBox hitRow = (HBox) table.getChildren().get(rowIndex);
+                hitRow.setStyle("-fx-border-color: gold; -fx-border-width: 2; -fx-background-color: transparent;");
+                for (javafx.scene.Node node : hitRow.getChildren()) {
+                    if (node instanceof Label) {
+                        ((Label) node).setTextFill(Color.web("#dddd00"));
+                    }
+                }
+            }
+        }
+
+        scoreLabel.setText("Score: " + game.getTotalScore());
+>>>>>>> parent of d0b5a0f (made new menu stuff and added some test cases)
     }
 
     public Button getGoBackButton() {
