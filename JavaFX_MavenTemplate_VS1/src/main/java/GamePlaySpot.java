@@ -80,7 +80,6 @@ public class GamePlaySpot extends VBox {
         for (int val : spotValues) {
             Button b = new Button(String.valueOf(val));
             styleOptionButton(b, gliker, false);
-            buttons.add(b);
 
             b.setOnAction(e -> {
                 selectedSpots = val;
