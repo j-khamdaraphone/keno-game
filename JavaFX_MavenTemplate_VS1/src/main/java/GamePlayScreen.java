@@ -60,7 +60,7 @@ public class GamePlayScreen {
         HBox topBox = new HBox(20);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS); // pushes scoreLabel to the right
-        VBox leftBox = new VBox(menuHelper.getMenuBar(), drawingLabel);
+        VBox leftBox = new VBox( drawingLabel);
         leftBox.setSpacing(5);
         topBox.getChildren().addAll(leftBox, spacer, scoreLabel);
         topBox.setPadding(new Insets(5));
@@ -137,11 +137,6 @@ public class GamePlayScreen {
             }
             lockSelection(); // optional: prevent further selections
             startDrawings(); // this starts the animation and shows results
-        });
-
-        goBack.setOnAction(e -> {
-            // TODO: handle returning to Welcome scene in JavaFXTemplate
-            System.out.println("Returning to Welcome screen...");
         });
 
         controls.getChildren().addAll(startDraw, goBack);
@@ -396,6 +391,10 @@ public class GamePlayScreen {
 
         // Update score label
         scoreLabel.setText("Score: " + totalScore);
+    }
+
+    public Button getGoBackButton() {
+        return goBack;
     }
 
 }
