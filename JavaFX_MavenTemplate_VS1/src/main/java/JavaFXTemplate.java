@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import javafx.scene.layout.StackPane;
 
 public class JavaFXTemplate extends Application {
-
+    private GamePlaySpot gamePlaySpot;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -41,12 +41,20 @@ public class JavaFXTemplate extends Application {
 
         welcome.getStartButton().setOnAction(e -> {
             System.out.println("Switching to GamePlaySpot screen...");
+            gamePlaySpot = new GamePlaySpot();
 
-            GamePlaySpot gamePlaySpot = new GamePlaySpot();
-            Scene gameScene = new Scene(gamePlaySpot, 700, 700);
-            primaryStage.setScene(gameScene);
+            gamePlaySpot.getNextButton().setOnAction(nextEvent -> {
+                int spots = gamePlaySpot.getSelectedSpots();
+                int draws = gamePlaySpot.getSelectedDrawings();
+
+                GamePlayScreen gamePlayScreen = new GamePlayScreen(spots, draws);
+                Scene gameScene = new Scene(gamePlayScreen.getRoot(), 700, 700);
+                primaryStage.setScene(gameScene);
         });
 
+        Scene gameScene = new Scene(gamePlaySpot, 700, 700);
+        primaryStage.setScene(gameScene);
+        });
         kenoMenu.getRulesOfGame().setOnAction(e ->
                 kenoMenu.showPopup("Rules of Keno", Rules.getText(), root, rootPane)
         );

@@ -17,6 +17,7 @@ import javafx.scene.text.Text;
 public class GamePlaySpot extends VBox {
     private List<Button> spotOptions;
     private List<Button> drawOptions;
+    private Button nextButton;
     private KenoMenu menuHelper;
     private int selectedSpots = 0;
     private int selectedDrawings = 0;
@@ -40,13 +41,15 @@ public class GamePlaySpot extends VBox {
         HBox drawBox = new HBox(10);
         drawBox.getChildren().addAll(drawOptions);
 
+        nextButton = new Button("Next");
+        nextButton.setStyle("-fx-background-color: gold; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         getChildren().addAll(
                 menuHelper.getMenuBar(),
                 title,
                 new Text("Select Spots:"), spotBox,
-                new Text("Select Drawings:"), drawBox
-                // backButton can be added here later
+                new Text("Select Drawings:"), drawBox,
+                nextButton
         );
 
     }
@@ -59,6 +62,11 @@ public class GamePlaySpot extends VBox {
             Button b = new Button(String.valueOf(val));
             b.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;");
 
+            b.setOnAction(e -> {
+                selectedSpots = val;
+                buttons.forEach(btn -> btn.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;"));
+                b.setStyle("-fx-background-color: gold; -fx-font-size: 14px; -fx-font-weight: bold;");
+            });
             buttons.add(b);
 
         }
@@ -76,6 +84,11 @@ public class GamePlaySpot extends VBox {
 
             buttons.add(b);
 
+            b.setOnAction(e -> {
+                selectedSpots = val;
+                buttons.forEach(btn -> btn.setStyle("-fx-background-color: lightgray; -fx-font-size: 14px;"));
+                b.setStyle("-fx-background-color: gold; -fx-font-size: 14px; -fx-font-weight: bold;");
+            });
         }
 
         return buttons;
@@ -83,7 +96,7 @@ public class GamePlaySpot extends VBox {
 
 
 
-
+    public Button getNextButton() { return nextButton; }
     public int getSelectedSpots() { return selectedSpots; }
     public int getSelectedDrawings() { return selectedDrawings; }
 
