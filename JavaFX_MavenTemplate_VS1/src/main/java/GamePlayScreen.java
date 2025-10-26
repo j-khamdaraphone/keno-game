@@ -21,6 +21,7 @@ public class GamePlayScreen {
     private KenoGame game;
     private Text drawingLabel, scoreLabel;
     private boolean locked = false;
+    private Button randomPickButton;
 
     public GamePlayScreen(int spots, int draws) {
         this.spotsToPlay = spots;
@@ -101,23 +102,39 @@ public class GamePlayScreen {
         controls.setAlignment(Pos.CENTER);
         controls.setPadding(new Insets(20));
 
-        startDraw = new Button("START DRAW");
+        startDraw = new Button("START");
         goBack = new Button("GO BACK");
+        randomPickButton = new Button("RANDOM");
 
         styleControlButton(startDraw);
         styleControlButton(goBack);
+        styleControlButton(randomPickButton);
 
         startDraw.setOnAction(e -> startDraws());
         goBack.setOnAction(e -> System.out.println("Go back pressed"));
+        randomPickButton.setOnAction(e -> {
+            game.performRandomPick();
+            selectedNumbers.clear();
+            selectedNumbers.addAll(game.getSelectedNumbers());
 
-        controls.getChildren().addAll(startDraw, goBack);
+            for (Button btn : numberButtons.values()) {
+                int num = Integer.parseInt(btn.getText());
+                if (selectedNumbers.contains(num)) {
+                    btn.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
+                } else {
+                    btn.setStyle("-fx-background-color: #2e3a4f; -fx-text-fill: white; -fx-background-radius: 8;");
+                }
+            }
+        });
+
+        controls.getChildren().addAll(startDraw, randomPickButton, goBack);
         return controls;
     }
 
     private void styleControlButton(Button b) {
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         b.setFont(gliker);
-        b.setPrefSize(300, 60);
+        b.setPrefSize(250, 60);
         b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;");
         b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #ffbd59; -fx-text-fill: #01203f; -fx-background-radius: 12;"));
         b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;"));

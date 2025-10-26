@@ -21,6 +21,15 @@ public class KenoGame {
         this.selectedNumbers = new HashSet<>(numbers);
     }
 
+    public void performRandomPick() {
+        selectedNumbers.clear();
+        Random rand = new Random();
+        while (selectedNumbers.size() < spotsToPlay) {
+            int number = rand.nextInt(80) + 1;
+            selectedNumbers.add(number);
+        }
+    }
+
     public Set<Integer> getSelectedNumbers() {
         return selectedNumbers;
     }
