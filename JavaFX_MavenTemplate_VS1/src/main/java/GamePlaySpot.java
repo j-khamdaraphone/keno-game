@@ -116,6 +116,8 @@ public class GamePlaySpot extends VBox {
 
     private void styleOptionButton(Button b, Font font, boolean selected) {
         b.setFont(font);
+        b.setPrefSize(100, 60);
+
         if (selected) {
             b.setStyle(
                     "-fx-background-color: #ffbd59;" +
@@ -129,7 +131,27 @@ public class GamePlaySpot extends VBox {
                             "-fx-background-radius: 12;"
             );
         }
-        b.setPrefSize(100, 60);
+
+
+        b.setOnMouseEntered(e -> {
+            if (!selected) {
+                b.setStyle(
+                        "-fx-background-color: #ffbd59;" +
+                                "-fx-text-fill: #01203f;" +
+                                "-fx-background-radius: 12;"
+                );
+            }
+        });
+
+        b.setOnMouseExited(e -> {
+            if (!selected) {
+                b.setStyle(
+                        "-fx-background-color: #01203f;" +
+                                "-fx-text-fill: #ffbd59;" +
+                                "-fx-background-radius: 12;"
+                );
+            }
+        });
     }
 
 
