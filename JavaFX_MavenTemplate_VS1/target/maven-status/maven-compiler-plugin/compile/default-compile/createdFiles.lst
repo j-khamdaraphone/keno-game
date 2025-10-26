@@ -2,5 +2,6 @@ Odds.class
 GamePlaySpot.class
 Welcome.class
 Rules.class
+GamePlayScreen.class
 KenoMenu.class
 JavaFXTemplate.class
