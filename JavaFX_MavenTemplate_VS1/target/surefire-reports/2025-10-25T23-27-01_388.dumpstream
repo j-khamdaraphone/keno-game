@@ -1,0 +1,15 @@
+# Created at 2025-10-25T23:27:01.639
+WARNING: A restricted method in java.lang.System has been called
+
+# Created at 2025-10-25T23:27:01.639
+WARNING: java.lang.System::load has been called by com.sun.glass.utils.NativeLibLoader in an unnamed module (file:/Users/dalejamesjoseph/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1-mac-aarch64.jar)
+
+# Created at 2025-10-25T23:27:01.639
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+
+# Created at 2025-10-25T23:27:01.640
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+# Created at 2025-10-25T23:27:01.640
+
+
