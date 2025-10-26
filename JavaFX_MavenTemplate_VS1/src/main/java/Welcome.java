@@ -42,9 +42,9 @@ public class Welcome {
     public StackPane createWelcomeScreen() {
         StackPane stack = new StackPane();
         stack.setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
-        stack.getChildren().addAll(kenoImage, startButton); // add button here
+        stack.getChildren().addAll(kenoImage, startButton);
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        startButton.setTranslateY(-150); // move it up a bit from bottom
+        startButton.setTranslateY(-150);
         return stack;
     }
 

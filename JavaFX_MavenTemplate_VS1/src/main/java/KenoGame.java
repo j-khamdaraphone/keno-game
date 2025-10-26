@@ -45,7 +45,7 @@ public class KenoGame {
 
         currentDrawNumbers = new HashSet<>();
         Random rand = new Random();
-        while (currentDrawNumbers.size() < spotsToPlay) {
+        while (currentDrawNumbers.size() < 20) {
             currentDrawNumbers.add(rand.nextInt(80) + 1);
         }
 
@@ -61,19 +61,44 @@ public class KenoGame {
     }
 
     public int calculateWin(int hits) {
-        // Keep your original "good" scoring logic:
-        if (hits == 0) return 0;
-        if (hits == 1) return 2;
-        if (hits == 2) return 5;
-        if (hits == 3) return 20;
-        if (hits == 4) return 100;
-        if (hits == 5) return 200;
-        if (hits == 6) return 500;
-        if (hits == 7) return 1000;
-        if (hits == 8) return 2000;
-        if (hits == 9) return 5000;
-        if (hits == 10) return 10000;
-        return 0;
+        switch (spotsToPlay) {
+            case 1: // 1 Spot Game
+                if (hits == 1) return 2;
+                return 0;
+
+            case 4: // 4 Spot Game
+                switch (hits) {
+                    case 2: return 1;
+                    case 3: return 5;
+                    case 4: return 75;
+                    default: return 0;
+                }
+
+            case 8: // 8 Spot Game
+                switch (hits) {
+                    case 4: return 2;
+                    case 5: return 12;
+                    case 6: return 50;
+                    case 7: return 750;
+                    case 8: return 10000;
+                    default: return 0;
+                }
+
+            case 10: // 10 Spot Game
+                switch (hits) {
+                    case 0: return 5;
+                    case 5: return 2;
+                    case 6: return 15;
+                    case 7: return 40;
+                    case 8: return 450;
+                    case 9: return 4250;
+                    case 10: return 100000;
+                    default: return 0;
+                }
+
+            default:
+                return 0; // For other spot games
+        }
     }
 
     public int getSpotsToPlay() {
