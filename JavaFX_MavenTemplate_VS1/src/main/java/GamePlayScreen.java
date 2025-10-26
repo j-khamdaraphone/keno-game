@@ -31,6 +31,7 @@ public class GamePlayScreen {
     private int totalScore = 0;
     private Text scoreLabel;
 
+
     public GamePlayScreen(int spots, int draws) {
         menuHelper = new KenoMenu();
         spotsToPlay = spots;
@@ -391,5 +392,9 @@ public class GamePlayScreen {
         b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;"));
     }
 
+
+    public Button getGoBackButton() {
+        return goBack;
+    }
 
 }

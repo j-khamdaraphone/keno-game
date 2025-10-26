@@ -1,3 +1,4 @@
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
@@ -87,6 +89,8 @@ public class GamePlaySpot extends VBox {
                 }
                 styleOptionButton(b, gliker, true);
             });
+            buttons.add(b);
+
         }
 
         return buttons;
