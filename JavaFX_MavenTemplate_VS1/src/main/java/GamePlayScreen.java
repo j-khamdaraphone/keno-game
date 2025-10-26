@@ -118,7 +118,7 @@ public class GamePlayScreen {
     private void styleControlButton(Button b) {
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         b.setFont(gliker);
-        b.setPrefSize(300, 60);
+        b.setPrefSize(180, 50);
         b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;");
         b.setOnMouseEntered(e -> b.setStyle("-fx-background-color: #ffbd59; -fx-text-fill: #01203f; -fx-background-radius: 12;"));
         b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #01203f; -fx-text-fill: #ffbd59; -fx-background-radius: 12;"));
@@ -179,6 +179,7 @@ public class GamePlayScreen {
         scoreLabel.setText("Score: " + game.getTotalScore());
     }
 
+
     private void startDraws() {
         if (selectedNumbers.size() != spotsToPlay) {
             System.out.println("Select exactly " + spotsToPlay + " numbers!");
@@ -223,6 +224,7 @@ public class GamePlayScreen {
         pause.setOnFinished(e -> performNextDraw(drawNumber + 1));
         pause.play();
     }
+
 
 
     public Button getGoBackButton() {

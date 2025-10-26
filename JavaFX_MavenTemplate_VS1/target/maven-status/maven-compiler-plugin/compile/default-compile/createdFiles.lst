@@ -1,9 +1,6 @@
 Odds.class
 FontLoader.class
-GamePlaySpot.class
 KenoGame.class
-Welcome.class
-GamePlayScreen.class
 JavaFXTemplate.class
 Rules.class
 KenoMenu.class
