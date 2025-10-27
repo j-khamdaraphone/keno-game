@@ -19,6 +19,10 @@ public class KenoGame {
             throw new IllegalArgumentException("Too many numbers selected");
         }
         this.selectedNumbers = new HashSet<>(numbers);
+
+        if(spotsToPlay > numbers.size()) {
+            throw new IllegalArgumentException("Too few numbers selected or duplicated");
+        }
     }
 
     public void performRandomPick() {
