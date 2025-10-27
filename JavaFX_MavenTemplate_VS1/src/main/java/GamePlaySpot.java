@@ -22,10 +22,15 @@ public class GamePlaySpot extends VBox {
     private int selectedSpots = 0;
     private int selectedDrawings = 0;
 
+
+    private String backgroundStyle = "-fx-background-color: linear-gradient(to right, #e76366, #8355eb);";
+
+
     public GamePlaySpot() {
+
         setSpacing(25);
         setPadding(new Insets(20));
-        setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
+        setStyle(backgroundStyle);
         setAlignment(Pos.CENTER);
 
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 32);
@@ -67,6 +72,15 @@ public class GamePlaySpot extends VBox {
                 nextButton
         );
 
+    }
+
+    public void setBackgroundStyle(boolean isBlue) {
+        if (isBlue) {
+            backgroundStyle = "-fx-background-color: linear-gradient(to right, #01203f, #0047ab);"; // blue
+        } else {
+            backgroundStyle = "-fx-background-color: linear-gradient(to right, #e76366, #8355eb);"; // pink/purple
+        }
+        setStyle(backgroundStyle);
     }
 
     private List<Button> createSpotButtons(){
@@ -153,6 +167,8 @@ public class GamePlaySpot extends VBox {
             }
         });
     }
+
+
 
 
     public Button getNextButton() { return nextButton; }
