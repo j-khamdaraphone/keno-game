@@ -23,6 +23,7 @@ public class KenoMenu {
     private MenuItem exit;
     private MenuItem newLookItem;
     private BorderPane mainContent;
+    private boolean isDefaultStyle = true;
 
     public KenoMenu() {
         menuBar= new MenuBar();
@@ -62,10 +63,6 @@ public class KenoMenu {
         return exit;
     }
 
-    public void applyNewLook() {
-        System.out.println("Applying new look...");
-        // Add your look-and-feel changes here
-    }
 
     public void showPopup(String title, String message, BorderPane mainContent, StackPane rootPane) {
         mainContent.setEffect(new GaussianBlur(5));

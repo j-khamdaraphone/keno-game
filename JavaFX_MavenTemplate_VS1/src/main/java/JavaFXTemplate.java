@@ -15,15 +15,17 @@ import javafx.scene.layout.StackPane;
 
 public class JavaFXTemplate extends Application {
     private GamePlaySpot gamePlaySpot;
+    private GamePlayScreen gamePlayScreen;
+    boolean[] isBlue = {false};
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		launch(args);
 	}
 
-	//feel free to remove the starter code from this method
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
+
         primaryStage.setTitle("Keno");
 
         Welcome welcome = new Welcome();
@@ -45,7 +47,7 @@ public class JavaFXTemplate extends Application {
             gamePlaySpot = new GamePlaySpot();
 
             kenoMenu.setNewLookVisible(true);
-            // Set up the Next button
+
             gamePlaySpot.getNextButton().setOnAction(nextEvent -> {
                 int spots = gamePlaySpot.getSelectedSpots();
                 int draws = gamePlaySpot.getSelectedDrawings();
@@ -55,18 +57,19 @@ public class JavaFXTemplate extends Application {
                     return;
                 }
 
-                GamePlayScreen gamePlayScreen = new GamePlayScreen(spots, draws);
+                gamePlayScreen = new GamePlayScreen(spots, draws);
+                gamePlayScreen.setBackgroundStyle(isBlue[0]);
 
-                // Go Back button action
+
                 gamePlayScreen.getGoBackButton().setOnAction(backEvent -> {
-                    // Return to GamePlaySpot
-                    root.setCenter(gamePlaySpot); // <-- reset the center of BorderPane
+
+                    root.setCenter(gamePlaySpot);
                 });
 
-                root.setCenter(gamePlayScreen.getRoot()); // <-- show gameplay screen
+                root.setCenter(gamePlayScreen.getRoot());
             });
 
-            root.setCenter(gamePlaySpot); // <-- show gamePlaySpot
+            root.setCenter(gamePlaySpot);
         });
 
 
@@ -80,7 +83,15 @@ public class JavaFXTemplate extends Application {
 
         kenoMenu.getExit().setOnAction(e -> primaryStage.close());
 
-        kenoMenu.getNewLookItem().setOnAction(e -> kenoMenu.applyNewLook());
+        kenoMenu.getNewLookItem().setOnAction(e -> {
+            isBlue[0] = !isBlue[0];
+            if (gamePlaySpot != null) {
+                gamePlaySpot.setBackgroundStyle(isBlue[0]);
+            }
+            if (gamePlayScreen != null) {
+                gamePlayScreen.setBackgroundStyle(isBlue[0]);
+            }
+        });
 
         Scene scene = new Scene(rootPane, 700, 700);
         primaryStage.setScene(scene);

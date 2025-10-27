@@ -22,6 +22,8 @@ public class GamePlayScreen {
     private Text drawingLabel, scoreLabel;
     private boolean locked = false;
     private Button randomPickButton;
+    private String backgroundStyle = "-fx-background-color: linear-gradient(to right, #e76366, #8355eb);";
+
 
     public GamePlayScreen(int spots, int draws) {
         this.spotsToPlay = spots;
@@ -31,7 +33,8 @@ public class GamePlayScreen {
         this.game = new KenoGame(spots, draws);
 
         root = new BorderPane();
-        root.setStyle("-fx-background-color: linear-gradient(to right, #e76366, #8355eb);");
+        root.setStyle(backgroundStyle);
+
 
         Font gliker = Font.loadFont(getClass().getResourceAsStream("/Gliker-Bold.ttf"), 28);
         drawingLabel = new Text("DRAWING #1");
@@ -56,6 +59,16 @@ public class GamePlayScreen {
         root.setBottom(createControlButtons());
         root.setLeft(createScoreTable());
     }
+
+    public void setBackgroundStyle(boolean isBlue) {
+        if (isBlue) {
+            backgroundStyle = "-fx-background-color: linear-gradient(to right, #01203f, #0047ab);"; // blue
+        } else {
+            backgroundStyle = "-fx-background-color: linear-gradient(to right, #e76366, #8355eb);"; // pink/purple
+        }
+        root.setStyle(backgroundStyle);
+    }
+
 
     public BorderPane getRoot() {
         return root;
