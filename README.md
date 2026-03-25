@@ -119,11 +119,6 @@ java -jar target/FXTemplate-0.0.1-SNAPSHOT.jar
 - `javafx-fxml` - JavaFX FXML support
 - `junit-jupiter` - Unit testing framework
 
-## Course Information
-
-- **Course**: CS 342 - Object-Oriented Programming
-- **Semester**: Fall 2025
-- **Assignment**: Keno Game Project
 
 ---
 
